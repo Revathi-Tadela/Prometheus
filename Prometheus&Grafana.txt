@@ -1,0 +1,207 @@
+   ,     #_
+   ~\_  ####_        Amazon Linux 2023
+  ~~  \_#####\
+  ~~     \###|
+  ~~       \#/ ___   https://aws.amazon.com/linux/amazon-linux-2023
+   ~~       V~' '->
+    ~~~         /
+      ~~._.   _/
+         _/ _/
+       _/m/'
+[ec2-user@ip-172-31-80-33 ~]$ cd /opt
+[ec2-user@ip-172-31-80-33 opt]$ sudo wget https://github.com/prometheus/prometheus/releases/download/v2.48.0/prometheus-2.48.0.linux-amd64.tar.gz
+--2024-10-01 16:54:28--  https://github.com/prometheus/prometheus/releases/download/v2.48.0/prometheus-2.48.0.linux-amd64.tar.gz
+Resolving github.com (github.com)... 140.82.112.3
+Connecting to github.com (github.com)|140.82.112.3|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://objects.githubusercontent.com/github-production-release-asset-2e65be/6838921/c4b7d496-4757-4044-a012-b759d1a87d5a?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20241001%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241001T165428Z&X-Amz-Expires=300&X-Amz-Signature=221daedde1a0308018acd3ed021b0c11357831f5347df9941c1243bbb176781d&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dprometheus-2.48.0.linux-amd64.tar.gz&response-content-type=application%2Foctet-stream [following]
+--2024-10-01 16:54:28--  https://objects.githubusercontent.com/github-production-release-asset-2e65be/6838921/c4b7d496-4757-4044-a012-b759d1a87d5a?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20241001%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241001T165428Z&X-Amz-Expires=300&X-Amz-Signature=221daedde1a0308018acd3ed021b0c11357831f5347df9941c1243bbb176781d&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dprometheus-2.48.0.linux-amd64.tar.gz&response-content-type=application%2Foctet-stream
+Resolving objects.githubusercontent.com (objects.githubusercontent.com)... 185.199.110.133, 185.199.111.133, 185.199.108.133, ...
+Connecting to objects.githubusercontent.com (objects.githubusercontent.com)|185.199.110.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 96254785 (92M) [application/octet-stream]
+Saving to: ‘prometheus-2.48.0.linux-amd64.tar.gz’
+
+prometheus-2.48.0.linux-amd64.tar.gz     100%[================================================================================>]  91.79M  76.6MB/s    in 1.2s    
+
+2024-10-01 16:54:30 (76.6 MB/s) - ‘prometheus-2.48.0.linux-amd64.tar.gz’ saved [96254785/96254785]
+
+[ec2-user@ip-172-31-80-33 opt]$ sudo tar -xvzf prometheus-2.48.0.linux-amd64.tar.gz
+prometheus-2.48.0.linux-amd64/
+prometheus-2.48.0.linux-amd64/prometheus
+prometheus-2.48.0.linux-amd64/promtool
+prometheus-2.48.0.linux-amd64/LICENSE
+prometheus-2.48.0.linux-amd64/consoles/
+prometheus-2.48.0.linux-amd64/consoles/node-overview.html
+prometheus-2.48.0.linux-amd64/consoles/node-disk.html
+prometheus-2.48.0.linux-amd64/consoles/prometheus-overview.html
+prometheus-2.48.0.linux-amd64/consoles/prometheus.html
+prometheus-2.48.0.linux-amd64/consoles/node.html
+prometheus-2.48.0.linux-amd64/consoles/node-cpu.html
+prometheus-2.48.0.linux-amd64/consoles/index.html.example
+prometheus-2.48.0.linux-amd64/console_libraries/
+prometheus-2.48.0.linux-amd64/console_libraries/menu.lib
+prometheus-2.48.0.linux-amd64/console_libraries/prom.lib
+prometheus-2.48.0.linux-amd64/prometheus.yml
+prometheus-2.48.0.linux-amd64/NOTICE
+[ec2-user@ip-172-31-80-33 opt]$ sudo mv prometheus-2.48.0.linux-amd64 prometheus
+[ec2-user@ip-172-31-80-33 opt]$ cd prometheus
+[ec2-user@ip-172-31-80-33 prometheus]$ sudo vim /etc/systemd/system/prometheus.service
+[ec2-user@ip-172-31-80-33 prometheus]$ sudo systemctl daemon-reload
+[ec2-user@ip-172-31-80-33 prometheus]$ sudo systemctl start prometheus
+[ec2-user@ip-172-31-80-33 prometheus]$ sudo systemctl enable prometheus
+Created symlink /etc/systemd/system/multi-user.target.wants/prometheus.service → /etc/systemd/system/prometheus.service.
+[ec2-user@ip-172-31-80-33 prometheus]$ sudo systemctl status prometheus
+● prometheus.service - Prometheus
+     Loaded: loaded (/etc/systemd/system/prometheus.service; enabled; preset: disabled)
+     Active: active (running) since Tue 2024-10-01 16:55:51 UTC; 19s ago
+   Main PID: 2889 (prometheus)
+      Tasks: 8 (limit: 4658)
+     Memory: 18.6M
+        CPU: 55ms
+     CGroup: /system.slice/prometheus.service
+             └─2889 /opt/prometheus/prometheus --config.file=/opt/prometheus/prometheus.yml
+
+Oct 01 16:55:51 ip-172-31-80-33.ec2.internal prometheus[2889]: ts=2024-10-01T16:55:51.148Z caller=head.go:682 level=info component=tsdb msg="On-disk memory mappa>
+Oct 01 16:55:51 ip-172-31-80-33.ec2.internal prometheus[2889]: ts=2024-10-01T16:55:51.148Z caller=head.go:690 level=info component=tsdb msg="Replaying WAL, this >
+Oct 01 16:55:51 ip-172-31-80-33.ec2.internal prometheus[2889]: ts=2024-10-01T16:55:51.148Z caller=head.go:761 level=info component=tsdb msg="WAL segment loaded" >
+Oct 01 16:55:51 ip-172-31-80-33.ec2.internal prometheus[2889]: ts=2024-10-01T16:55:51.148Z caller=head.go:798 level=info component=tsdb msg="WAL replay completed>
+Oct 01 16:55:51 ip-172-31-80-33.ec2.internal prometheus[2889]: ts=2024-10-01T16:55:51.150Z caller=main.go:1045 level=info fs_type=XFS_SUPER_MAGIC
+Oct 01 16:55:51 ip-172-31-80-33.ec2.internal prometheus[2889]: ts=2024-10-01T16:55:51.150Z caller=main.go:1048 level=info msg="TSDB started"
+Oct 01 16:55:51 ip-172-31-80-33.ec2.internal prometheus[2889]: ts=2024-10-01T16:55:51.150Z caller=main.go:1229 level=info msg="Loading configuration file" filena>
+Oct 01 16:55:51 ip-172-31-80-33.ec2.internal prometheus[2889]: ts=2024-10-01T16:55:51.153Z caller=main.go:1266 level=info msg="Completed loading of configuration>
+Oct 01 16:55:51 ip-172-31-80-33.ec2.internal prometheus[2889]: ts=2024-10-01T16:55:51.153Z caller=main.go:1009 level=info msg="Server is ready to receive web req>
+Oct 01 16:55:51 ip-172-31-80-33.ec2.internal prometheus[2889]: ts=2024-10-01T16:55:51.153Z caller=manager.go:1012 level=info component="rule manager" msg="Starti>
+
+[ec2-user@ip-172-31-80-33 prometheus]$ sudo tee /etc/yum.repos.d/grafana.repo<<EOF
+[grafana]
+name=grafana
+baseurl=https://packages.grafana.com/oss/rpm
+repo_gpgcheck=1
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.grafana.com/gpg.key
+EOF
+
+sudo yum install grafana -y
+[grafana]
+name=grafana
+baseurl=https://packages.grafana.com/oss/rpm
+repo_gpgcheck=1
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.grafana.com/gpg.key
+grafana                                                                                                                           5.8 kB/s | 712  B     00:00    
+grafana                                                                                                                            87 kB/s | 2.4 kB     00:00    
+Importing GPG key 0x10458545:
+ Userid     : "Grafana Labs <engineering@grafana.com>"
+ Fingerprint: B53A E77B ADB6 30A6 8304 6005 963F A277 1045 8545
+ From       : https://packages.grafana.com/gpg.key
+grafana                                                                                                                            10 kB/s | 712  B     00:00    
+Error: Failed to download metadata for repo 'grafana': repomd.xml GPG signature verification error: Bad GPG signature
+Ignoring repositories: grafana
+Last metadata expiration check: 0:02:35 ago on Tue Oct  1 16:54:00 2024.
+No match for argument: grafana
+Error: Unable to find a match: grafana
+[ec2-user@ip-172-31-80-33 prometheus]$ sudo tee /etc/yum.repos.d/grafana.repo<<EOF
+[grafana]
+name=grafana
+baseurl=https://packages.grafana.com/oss/rpm
+repo_gpgcheck=1
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.grafana.com/gpg.key
+EOF
+
+sudo yum install grafana -y
+[grafana]
+name=grafana
+baseurl=https://packages.grafana.com/oss/rpm
+repo_gpgcheck=1
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.grafana.com/gpg.key
+grafana                                                                                                                           9.7 kB/s | 712  B     00:00    
+grafana                                                                                                                            79 kB/s | 2.4 kB     00:00    
+grafana                                                                                                                           9.3 kB/s | 712  B     00:00    
+Error: Failed to download metadata for repo 'grafana': repomd.xml GPG signature verification error: Bad GPG signature
+Ignoring repositories: grafana
+Last metadata expiration check: 0:02:55 ago on Tue Oct  1 16:54:00 2024.
+No match for argument: grafana
+Error: Unable to find a match: grafana
+[ec2-user@ip-172-31-80-33 prometheus]$ sudo rpm --import https://packages.grafana.com/gpg.key
+[ec2-user@ip-172-31-80-33 prometheus]$ sudo yum clean all
+17 files removed
+[ec2-user@ip-172-31-80-33 prometheus]$ sudo yum update -y
+Amazon Linux 2023 repository                                                                                                       43 MB/s |  28 MB     00:00    
+Amazon Linux 2023 Kernel Livepatch repository                                                                                      72 kB/s |  11 kB     00:00    
+grafana                                                                                                                            53 MB/s | 124 MB     00:02    
+
+Dependencies resolved.
+Nothing to do.
+Complete!
+[ec2-user@ip-172-31-80-33 prometheus]$ sudo tee /etc/yum.repos.d/grafana.repo <<EOF
+[grafana]
+name=grafana
+baseurl=https://packages.grafana.com/oss/rpm
+repo_gpgcheck=1
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.grafana.com/gpg.key
+sslverify=0
+EOF
+[grafana]
+name=grafana
+baseurl=https://packages.grafana.com/oss/rpm
+repo_gpgcheck=1
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.grafana.com/gpg.key
+sslverify=0
+[ec2-user@ip-172-31-80-33 prometheus]$ sudo yum install grafana -y
+grafana                                                                                                                            15 kB/s | 712  B     00:00    
+Dependencies resolved.
+==================================================================================================================================================================
+ Package                               Architecture                         Version                                   Repository                             Size
+==================================================================================================================================================================
+Installing:
+ grafana                               x86_64                               11.2.1-1                                  grafana                               116 M
+
+Transaction Summary
+==================================================================================================================================================================
+Install  1 Package
+
+Total download size: 116 M
+Installed size: 441 M
+Downloading Packages:
+grafana-11.2.1-1.x86_64.rpm                                                                                                        40 MB/s | 116 MB     00:02    
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Total                                                                                                                              40 MB/s | 116 MB     00:02     
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                                                          1/1 
+  Installing       : grafana-11.2.1-1.x86_64                                                                                                                  1/1 
+  Running scriptlet: grafana-11.2.1-1.x86_64                                                                                                                  1/1 
+### NOT starting on installation, please execute the following statements to configure grafana to start automatically using systemd
+ sudo /bin/systemctl daemon-reload
+ sudo /bin/systemctl enable grafana-server.service
+### You can start grafana-server by executing
+ sudo /bin/systemctl start grafana-server.service
+
+POSTTRANS: Running script
+
+  Verifying        : grafana-11.2.1-1.x86_64                                                                                                                  1/1 
+
+Installed:
+  grafana-11.2.1-1.x86_64                                                                                                                                         
+
+Complete!
+[ec2-user@ip-172-31-80-33 prometheus]$ sudo systemctl start grafana-server
+[ec2-user@ip-172-31-80-33 prometheus]$ sudo systemctl enable grafana-server
+Synchronizing state of grafana-server.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable grafana-server
+Created symlink /etc/systemd/system/multi-user.target.wants/grafana-server.service → /usr/lib/systemd/system/grafana-server.service.
+[ec2-user@ip-172-31-80-33 prometheus]$ 
